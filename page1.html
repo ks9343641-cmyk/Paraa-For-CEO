@@ -158,7 +158,7 @@ function type() {
       setTimeout(() => {
         document.body.style.transition = 'opacity 1s ease';
         document.body.style.opacity = 0;
-        setTimeout(() => { window.location.href = 'page2.html'; }, 1000);
+        setTimeout(() => { window.location.replace('page2.html'); }, 1000);
       }, 27000);                                                          // teesre text ke 4 second baad
 
     }, BUDDY_DELAY);

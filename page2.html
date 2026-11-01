@@ -948,7 +948,7 @@ yes.addEventListener('click', async () => {
   await hideQ($('q1'));
    topEl.textContent = '';
   showQ($('q2'));                              // Question 2 fade-in
-  try { sessionStorage.setItem('stg', 'q2'); } catch (e) {}
+  setStage('q2');
 });
 
 /* =====================================================
@@ -1379,7 +1379,7 @@ function endFall() {
 }
 
 async function startOutro() {
-  try { sessionStorage.setItem('stg', 'p3'); } catch (e) {}
+  setStage('p3');
   while (popupOpen) await sleep(300);
   buddyEl.classList.add('far-left');          // sab outro buddy ek hi jagah (left)
   await bSay(5, 'CEO yaar tum bhi na kitne nakhre karti ho😒🥱,par koi na chalo aage chalte hai', true);
@@ -1406,7 +1406,7 @@ async function startOutro() {
   p4.classList.add('on'); void p4.offsetWidth; p4.classList.add('vis');       // agla page (bg #FFF9DC), content baad mein
   oc.classList.remove('show');
   endFall();
-  try { sessionStorage.setItem('stg', 'p4'); } catch (e) {}
+  setStage('p4');
   p4Run();
   bHide().then(() => buddyEl.classList.remove('far-left'));                   // buddy + bubble smoothly fade-out
 }
@@ -1476,7 +1476,7 @@ async function p4Run() {
   const nb = $('p4Next'); nb.classList.add('show');
   await new Promise(r => nb.addEventListener('click', r, { once: true }));
   nb.classList.remove('show');
-  try { sessionStorage.setItem('stg', 'p5'); } catch (e) {}
+  setStage('p5');
   $('p5').classList.add('on'); p4SongOff(); p5Run();
 }
 async function p4Draw() {
@@ -1618,7 +1618,10 @@ $('letterX').addEventListener('click', () => $('letter').classList.remove('on'))
 /* =====================================================
    REFRESH: jo page/stage khula tha wahin se dobara chalu
    ===================================================== */
-(function resume() {
+function setStage(g) { try { sessionStorage.setItem('stg', g); } catch (e) {} if (!history.state || history.state.stg !== g) history.pushState({ stg: g }, ''); }
+if (!history.state) history.replaceState({ stg: 'q1' }, '');
+window.addEventListener('popstate', e => { const g = (e.state && e.state.stg) || 'q1'; try { sessionStorage.setItem('stg', g); } catch (x) {} location.reload(); });
+   (function resume() {
   let g = null; try { g = sessionStorage.getItem('stg'); } catch (e) {}
   if (!['q2', 'p3', 'p4', 'p5'].includes(g)) return;
   finished = true; $('q1').style.display = 'none'; try { no.remove(); } catch (e) {}

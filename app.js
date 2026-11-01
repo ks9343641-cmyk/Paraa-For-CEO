@@ -298,7 +298,7 @@
     // Smooth fade-out, phir agla page
     document.body.style.transition = 'opacity 1s ease';
     document.body.style.opacity = 0;
-    setTimeout(() => { window.location.href = 'page1.html'; }, 1000);
+    setTimeout(() => { window.location.replace('page1.html'); }, 1000);
   }
 
   const closeModal = () => {
