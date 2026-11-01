@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#FFF9DC">
+<title>Security Page</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app-shell">
+  <section class="intro security-title">
+    <h1>Security <span>Page</span></h1>
+  </section>
+
+  <section class="stage" aria-label="Camera capture area">
+    <div class="glow glow-pink"></div><div class="glow glow-yellow"></div>
+    <div class="camera-card" id="cameraCard" aria-label="Animated camera">
+      <div class="camera-top">
+        <span class="camera-label">SNAP-01</span>
+        <span class="camera-status"><i></i><span id="statusText">STANDBY</span></span>
+      </div>
+      <div class="camera-window">
+        <div class="scanline"></div>
+        <img id="cameraGif" src="penguin-camera-transparent.gif" alt="Animated penguin holding a camera">
+        <div class="viewfinder"><i></i><i></i><i></i><i></i></div>
+        <div class="view-label">EVIDENCE VIEW</div>
+      </div>
+      <div class="camera-controls">
+        <div class="mini-lens"><span></span></div>
+        <div class="camera-readout"><strong id="timer">READY</strong><small id="timerHint">SHUTTER TIMER · 10 SEC</small></div>
+        <button id="captureBtn" class="shutter" type="button" aria-label="Capture evidence"><span></span></button>
+      </div>
+      <p class="click-hint" id="clickHint">Click the button</p>
+    </div>
+
+    <div class="buddy-area" id="buddyArea">
+      <img src="security-buddy.png" class="buddy" alt="Buddy character">
+      <div class="speech-card">
+        <span class="speech-name">BUDDY <span>✦</span></span>
+        <p id="buddyText"><span class="typed" id="typedText"></span><span class="rest" id="restText"></span></p>
+        <div class="speech-progress"><span id="speechProgress"></span></div>
+      </div>
+    </div>
+
+    <div class="verify" id="verify" aria-live="polite">
+      <h2 class="verify-title" id="verifyTitle"> lemme inspect ur pic 🫩 tum kartik ki CEO ho ya koi aur ho......</h2>
+      <div class="vsteps" id="vsteps">
+        <div class="vstep" id="vs1">
+          <div class="vhead"><span class="vname">1.Just Checking out ur khubsurti</span></div>
+          <div class="vbar"><span class="vfill"></span></div>
+          <div class="vstatus"><span class="vicon spin"></span><span class="vtext"></span></div>
+          <p class="vnote"></p>
+        </div>
+        <div class="vstep" id="vs2">
+          <div class="vhead"><span class="vname">2. Cuteness checking</span></div>
+          <div class="vbar"><span class="vfill"></span></div>
+          <div class="vstatus"><span class="vicon spin"></span><span class="vtext"></span></div>
+          <p class="vnote"></p>
+        </div>
+        <div class="vstep" id="vs3">
+          <div class="vhead"><span class="vname">3.kartik told me that no one can put his CEO’s beauty into words, so let me have a look at her too 🥰</span></div>
+          <div class="vbar"><span class="vfill"></span></div>
+          <div class="vstatus"><span class="vicon spin"></span><span class="vtext"></span></div>
+        </div>
+      </div>
+      <div class="vdone" id="vdone">
+        <div class="vbig">&#10003;</div>
+        <h2>Verification completed</h2>
+        <p class="access"><strong>Well, that confirms it. You’re Kartik’s CEO 😌</strong></p>
+        <p>Tumhari jo photo click kari thi vo dekhna chaao to dekh sakti ho</p>
+        <button class="continue-btn view-btn" id="viewBtn" type="button">View photo <span>&#8599;</span></button>
+      </div>
+    </div>
+  </section>
+
+</main>
+<div class="modal" id="photoModal" aria-hidden="true">
+  <div class="modal-box"><button class="modal-close" id="modalClose" type="button" aria-label="Close">&times;</button><img src="photo.jpg" alt="Your photo"></div>
+</div>
+
+<div class="next-countdown" id="nextCountdown" aria-live="polite"><span>chalo tumhe aage lekar chalte hai .....</span> <b id="nextTimer">10</b></div>
+
+<div class="flash" id="flash"></div>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>
