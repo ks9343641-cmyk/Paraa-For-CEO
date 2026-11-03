@@ -469,11 +469,19 @@
 #p5t{position:relative;z-index:2;box-sizing:border-box;width:var(--P);margin:0 auto;padding:calc(var(--g)*2) 6% calc(var(--g)*5);text-align:center;color:#503849;font-family:"Caveat","Segoe Script","Bradley Hand",cursive;font-weight:600;font-size:calc(var(--g)*.82);line-height:var(--g)}
 #p5Click{position:fixed;right:14px;bottom:14px;z-index:990;opacity:0;pointer-events:none;transition:opacity .8s;background:#fffdf4;color:#503849;border:1px solid #f0dfb2;border-radius:999px;padding:9px 18px;font:700 15px Nunito,system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.12)}
 #p5Click.show{opacity:1;pointer-events:auto}
-#p5Click{display:none !important}
 #letter{position:fixed;inset:0;z-index:995;background:rgba(80,56,73,.45);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .6s}
 #letter.on{opacity:1;pointer-events:auto}
 #letterBox{position:relative;background:#fffdf4;width:min(88vw,560px);min-height:40vh;max-height:80vh;overflow:auto;border-radius:14px;padding:30px 26px;box-sizing:border-box;color:#503849;font-family:"Caveat","Segoe Script",cursive;font-weight:600;font-size:26px;line-height:1.3;text-align:center}
 #letterX{position:absolute;right:10px;top:6px;border:0;background:none;font-size:22px;cursor:pointer;color:#503849}
+/* ===== PHOTO VIEWER ===== */
+#letter{background:rgba(40,25,35,.8)}
+#glWrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+#glImg{max-width:90vw;max-height:78vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.45);background:#fffdf4;object-fit:contain;user-select:none;-webkit-user-drag:none}
+#glNum{color:#fffdf4;font:700 16px Nunito,system-ui,sans-serif;letter-spacing:1px}
+#glX{position:fixed;right:14px;top:12px;width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,253,244,.9);color:#503849;font-size:20px;cursor:pointer;z-index:2}
+.glA{position:fixed;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,253,244,.85);color:#503849;font-size:30px;line-height:1;padding:0 0 4px;cursor:pointer;z-index:2}
+#glPrev{left:8px}
+#glNext{right:8px}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap">
 </head>
@@ -512,7 +520,12 @@
 <button id="p4Next" type="button">aage chalte hai CEO</button>
 <div id="p5"><div id="p5deco"></div><div id="p5t"></div></div>
 <button id="p5Click" type="button">click me</button>
-<div id="letter"><div id="letterBox"><button id="letterX" type="button">✕</button><div id="letterText"><!-- LETTER: apna letter yahan likhna --></div></div></div>
+<div id="letter">
+  <button id="glX" type="button">✕</button>
+  <button id="glPrev" class="glA" type="button">‹</button>
+  <div id="glWrap"><img id="glImg" alt=""><div id="glNum"></div></div>
+  <button id="glNext" class="glA" type="button">›</button>
+</div>
 <div id="outCount"><span>CEO ko aage lekar jaaya ja raha hai</span><b id="outNum">10</b></div>
 <div id="buddy">
   <img class="buddy" id="buddyImg" alt="">
@@ -1613,7 +1626,37 @@ async function p5Run() {
   cu.remove(); await sleep(900); $('p5Click').classList.add('show');
 }
 $('p5Click').addEventListener('click', () => $('letter').classList.add('on'));
-$('letterX').addEventListener('click', () => $('letter').classList.remove('on'));
+/* ===== PHOTO VIEWER ===== */
+const GL_TOTAL = 20;      // kitni photos hain
+const GL_EXT = 'jpg';     // photos ka extension (jpg / png / jpeg)
+let glI = 1;
+const glSrc = n => 'pic' + n + '.' + GL_EXT;
+function glShow(n) {
+  glI = ((n - 1 + GL_TOTAL) % GL_TOTAL) + 1;          // last ke baad phir pehli
+  $('glImg').src = glSrc(glI);
+  $('glNum').textContent = glI + ' / ' + GL_TOTAL;
+  new Image().src = glSrc(glI % GL_TOTAL + 1);        // agli photo pehle se load
+  new Image().src = glSrc((glI - 2 + GL_TOTAL) % GL_TOTAL + 1); // pichhli bhi
+}
+function glOpen() { glShow(1); $('letter').classList.add('on'); }
+function glClose() { $('letter').classList.remove('on'); }
+$('p5Click').addEventListener('click', glOpen);
+$('glX').addEventListener('click', glClose);
+$('glNext').addEventListener('click', () => glShow(glI + 1));
+$('glPrev').addEventListener('click', () => glShow(glI - 1));
+$('letter').addEventListener('click', e => { if (e.target === $('letter')) glClose(); });
+document.addEventListener('keydown', e => {
+  if (!$('letter').classList.contains('on')) return;
+  if (e.key === 'ArrowRight') glShow(glI + 1);
+  else if (e.key === 'ArrowLeft') glShow(glI - 1);
+  else if (e.key === 'Escape') glClose();
+});
+let glX0 = 0, glY0 = 0;
+$('letter').addEventListener('touchstart', e => { glX0 = e.touches[0].clientX; glY0 = e.touches[0].clientY; }, { passive: true });
+$('letter').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - glX0, dy = e.changedTouches[0].clientY - glY0;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) glShow(dx < 0 ? glI + 1 : glI - 1);
+}, { passive: true });
 
 /* =====================================================
    REFRESH: jo page/stage khula tha wahin se dobara chalu
